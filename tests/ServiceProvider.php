@@ -1,6 +1,4 @@
-<?php
-
-namespace Fico7489\Laravel\Pivot\Tests;
+<?php namespace GeneaLabs\LaravelPivotEvents\Tests;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {

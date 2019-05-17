@@ -1,13 +1,11 @@
-<?php
+<?php namespace GeneaLabs\LaravelPivotEvents\Tests;
 
-namespace Fico7489\Laravel\Pivot\Tests;
-
-use Fico7489\Laravel\Pivot\Tests\Models\Tag;
-use Fico7489\Laravel\Pivot\Tests\Models\Post;
-use Fico7489\Laravel\Pivot\Tests\Models\Role;
-use Fico7489\Laravel\Pivot\Tests\Models\User;
-use Fico7489\Laravel\Pivot\Tests\Models\Video;
-use Fico7489\Laravel\Pivot\Tests\Models\Seller;
+use GeneaLabs\LaravelPivotEvents\Tests\Models\Tag;
+use GeneaLabs\LaravelPivotEvents\Tests\Models\Post;
+use GeneaLabs\LaravelPivotEvents\Tests\Models\Role;
+use GeneaLabs\LaravelPivotEvents\Tests\Models\User;
+use GeneaLabs\LaravelPivotEvents\Tests\Models\Video;
+use GeneaLabs\LaravelPivotEvents\Tests\Models\Seller;
 
 class PivotEventTraitTest extends TestCase
 {
@@ -344,6 +342,7 @@ class PivotEventTraitTest extends TestCase
         ]);
     }
 
+    /** @group test */
     public function test_polymorphic_sync_int()
     {
         $this->startListening();
@@ -355,6 +354,7 @@ class PivotEventTraitTest extends TestCase
         $post->tags()->sync(1);
 
         $this->assertEquals(1, \DB::table('taggables')->count());
+
         $this->check_events([
             'eloquent.pivotDetaching: '.Post::class,
             'eloquent.pivotDetached: '.Post::class,

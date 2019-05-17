@@ -1,8 +1,8 @@
 <?php
 
-namespace Fico7489\Laravel\Pivot\Tests\Models;
+namespace GeneaLabs\LaravelPivotEvents\Tests\Models;
 
-use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
+use GeneaLabs\LaravelPivotEvents\Traits\PivotEventTrait;
 
 class User extends BaseModel
 {

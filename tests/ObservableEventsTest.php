@@ -1,8 +1,8 @@
 <?php
 
-namespace Fico7489\Laravel\Pivot\Tests;
+namespace GeneaLabs\LaravelPivotEvents\Tests;
 
-use Fico7489\Laravel\Pivot\Tests\Models\User;
+use GeneaLabs\LaravelPivotEvents\Tests\Models\User;
 
 class ObservableEventsTest extends TestCase
 {

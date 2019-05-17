@@ -1,6 +1,4 @@
-<?php
-
-namespace Fico7489\Laravel\Pivot\Traits;
+<?php namespace GeneaLabs\LaravelPivotEvents\Traits;
 
 trait PivotEventTrait
 {

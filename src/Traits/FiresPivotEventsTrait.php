@@ -1,6 +1,4 @@
-<?php
-
-namespace Fico7489\Laravel\Pivot\Traits;
+<?php namespace GeneaLabs\LaravelPivotEvents\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;

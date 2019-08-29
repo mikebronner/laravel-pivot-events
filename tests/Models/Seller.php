@@ -3,6 +3,7 @@
 namespace GeneaLabs\LaravelPivotEvents\Tests\Models;
 
 use GeneaLabs\LaravelPivotEvents\Traits\PivotEventTrait;
+use Illuminate\Support\Str;
 
 class Seller extends BaseModel
 {
@@ -22,7 +23,7 @@ class Seller extends BaseModel
         parent::boot();
 
         static::creating(function ($model) {
-            $model->{$model->getKeyName()} = str_random(16);
+            $model->{$model->getKeyName()} = Str::random(16);
         });
     }
 

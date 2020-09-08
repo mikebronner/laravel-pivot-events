@@ -8,8 +8,8 @@ created mainly to address compatibility issues with
 [Model Caching for Laravel](https://github.com/GeneaLabs/laravel-model-caching).
 
 ## Requirements
-- Laravel 5.5+
-- PHP 7.1.3+
+- Laravel 8.0+
+- PHP 7.3+
 
 ## Installation
 1.Install package with composer:

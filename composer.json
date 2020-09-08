@@ -23,8 +23,8 @@
         }
     ],
     "require": {
-        "illuminate/database": "^7.0",
-        "illuminate/support": "^7.0"
+        "illuminate/database": "^7.0 | ^8.0",
+        "illuminate/support": "^7.0 | ^8.0"
     },
     "require-dev": {
         "orchestra/testbench": "^5.0",

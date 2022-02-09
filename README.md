@@ -8,7 +8,7 @@ created mainly to address compatibility issues with
 [Model Caching for Laravel](https://github.com/GeneaLabs/laravel-model-caching).
 
 ## Sponsors
-We like to thank the following sponsors for their generosity. Please take a moment to check them out.
+We thank the following sponsors for their generosity. Please take a moment to check them out:
 
 - [LIX](https://lix-it.com)
 

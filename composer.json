@@ -8,10 +8,10 @@
         "laravel sync events",
         "eloquent events"
     ],
-    "homepage": "https://github.com/fico7489/laravel-pivot",
+    "homepage": "https://github.com/GeneaLabs/laravel-pivot",
     "support": {
-        "issues": "https://github.com/fico7489/laravel-pivot/issues",
-        "source": "https://github.com/fico7489/laravel-pivot"
+        "issues": "https://github.com/GeneaLabs/laravel-pivot/issues",
+        "source": "https://github.com/GeneaLabs/laravel-pivot"
     },
     "license": "MIT",
     "authors": [

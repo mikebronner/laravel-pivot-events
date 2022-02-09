@@ -23,11 +23,11 @@
         }
     ],
     "require": {
-        "illuminate/database": "^8.0",
-        "illuminate/support": "^8.0"
+        "illuminate/database": "^9.0",
+        "illuminate/support": "^9.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.0",
+        "orchestra/testbench": "^7.0",
         "symfony/thanks": "^1.0"
     },
     "autoload": {

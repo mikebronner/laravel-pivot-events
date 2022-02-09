@@ -7,6 +7,11 @@ created mainly to address compatibility issues with
 [Laravel Telescope](https://github.com/laravel/telescope) and
 [Model Caching for Laravel](https://github.com/GeneaLabs/laravel-model-caching).
 
+## Sponsors
+We like to thank the following sponsors for their generosity. Please take a moment to check them out.
+
+- [LIX](https://lix-it.com)
+
 ## Requirements
 - Laravel 8.0+
 - PHP 7.3+

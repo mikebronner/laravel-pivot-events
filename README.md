@@ -21,7 +21,7 @@ created mainly to address compatibility issues with
     model or only in particular models.
     ```php
     // ...
-    use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
+    use GeneaLabs\LaravelPivotEvents\Traits\PivotEventTrait;
     use Illuminate\Database\Eloquent\Model;
 
     abstract class BaseModel extends Model

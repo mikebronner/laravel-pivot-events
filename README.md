@@ -18,9 +18,9 @@ We thank the following sponsors for their generosity. Please take a moment to ch
 
 ## Installation
 1.Install package with composer:
-```
-composer require "genealabs/laravel-pivot-events:*"
-```
+    ```
+    composer require "genealabs/laravel-pivot-events:*"
+    ```
 
 2. Use `GeneaLabs\LaravelPivotEvents\Traits\PivotEventTrait` trait in your base
     model or only in particular models.

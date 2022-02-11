@@ -198,7 +198,7 @@ roles
 
 
 #### Attaching with array
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->attach([1]);

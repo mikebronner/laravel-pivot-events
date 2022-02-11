@@ -18,12 +18,12 @@ We thank the following sponsors for their generosity. Please take a moment to ch
 
 ## Installation
 1.Install package with composer:
-    ```
-    composer require "genealabs/laravel-pivot-events:*"
-    ```
+```
+composer require "genealabs/laravel-pivot-events:*"
+```
 
 2. Use `GeneaLabs\LaravelPivotEvents\Traits\PivotEventTrait` trait in your base
-    model or only in particular models.
+   model or only in particular models.
     ```php
     // ...
     use GeneaLabs\LaravelPivotEvents\Traits\PivotEventTrait;
@@ -38,7 +38,7 @@ We thank the following sponsors for their generosity. Please take a moment to ch
 
 ## New Eloquent Events
 
-You can check all eloquent events here:  https://laravel.com/docs/5.8/eloquent#events) 
+You can check all eloquent events here:  https://laravel.com/docs/5.8/eloquent#events)
 
 New events are :
 - `pivotSyncing`, `pivotSynced`
@@ -98,22 +98,22 @@ You can also catch them using dedicated Event Listeners:
 ```
 
 ## Supported Relationships
-**BelongsToMany**  and **MorphToMany**  
+**BelongsToMany**  and **MorphToMany**
 
 ## Which events are dispatched and when they are dispatched
-Four BelongsToMany methods dispatches events from this package : 
+Four BelongsToMany methods dispatches events from this package :
 
 **attach()**  
 Dispatches **one** **pivotAttaching** and **one** **pivotAttached** event.  
-Even when more rows are added only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable, and the changed row ids with attributes in the $pivotIdsAttributes variable.   
+Even when more rows are added only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable, and the changed row ids with attributes in the $pivotIdsAttributes variable.
 
 **detach()**  
 Dispatches **one** **pivotDetaching** and **one** **pivotDetached** event.  
-Even when more rows are deleted only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable.   
+Even when more rows are deleted only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable.
 
 **updateExistingPivot()**  
 Dispatches **one** **pivotUpdating** and **one** **pivotUpdated** event.   
-You can change only one row in the pivot table with updateExistingPivot.   
+You can change only one row in the pivot table with updateExistingPivot.
 
 **sync()**  
 Dispatches **one** **pivotSyncing** and **one** **pivotSynced** event.  
@@ -125,7 +125,7 @@ E.g. *How does sync work:* The sync first detaches all associations and then att
 ## Usage
 
 We have three tables in database users(id, name), roles(id, name), role_user(user_id, role_id).
-We have two models : 
+We have two models :
 
 ```
 ...
@@ -177,12 +177,12 @@ class Role extends Model
     ....
 ```
 
-### Attaching 
+### Attaching
 
 For attach() or detach() one event is dispatched for both pivot ids.
 
 #### Attaching with int
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->attach(1);
@@ -214,7 +214,7 @@ roles
 
 
 #### Attaching with model
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->attach(Role::first());
@@ -230,7 +230,7 @@ roles
 
 
 #### Attaching with collection
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->attach(Role::get());
@@ -246,7 +246,7 @@ roles
 
 
 #### Attaching with array (id => attributes)
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->attach([1, 2 => ['attribute' => 'test']], ['attribute2' => 'test2']);
@@ -265,7 +265,7 @@ roles
 
 For sync() method event is dispatched for each pivot row.
 
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->sync([1, 2]);
@@ -289,7 +289,7 @@ roles
 
 ### Detaching
 
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->detach([1, 2]);
@@ -304,7 +304,7 @@ roles
 
 ### Updating
 
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->updateExistingPivot(1, ['attribute' => 'test']);

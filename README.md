@@ -18,12 +18,12 @@ We thank the following sponsors for their generosity. Please take a moment to ch
 
 ## Installation
 1.Install package with composer:
-    ```
-    composer require "genealabs/laravel-pivot-events:*"
-    ```
+```
+composer require "genealabs/laravel-pivot-events:*"
+```
 
 2. Use `GeneaLabs\LaravelPivotEvents\Traits\PivotEventTrait` trait in your base
-    model or only in particular models.
+   model or only in particular models.
     ```php
     // ...
     use GeneaLabs\LaravelPivotEvents\Traits\PivotEventTrait;
@@ -38,9 +38,10 @@ We thank the following sponsors for their generosity. Please take a moment to ch
 
 ## New Eloquent Events
 
-You can check all eloquent events here:  https://laravel.com/docs/5.8/eloquent#events) 
+You can check all eloquent events here:  https://laravel.com/docs/5.8/eloquent#events)
 
 New events are :
+- `pivotSyncing`, `pivotSynced`
 - `pivotAttaching`, `pivotAttached`
 - `pivotDetaching`, `pivotDetached`
 - `pivotUpdating`, `pivotUpdated`
@@ -50,6 +51,14 @@ The easiest way to catch events is using methods in your model's `boot()` method
 public static function boot()
 {
     parent::boot();
+
+    static::pivotSyncing(function ($model, $relationName) {
+        //
+    });
+     
+    static::pivotSynced(function ($model, $relationName, $changes) {
+        //
+    });
 
     static::pivotAttaching(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
         //
@@ -89,34 +98,34 @@ You can also catch them using dedicated Event Listeners:
 ```
 
 ## Supported Relationships
-**BelongsToMany**  and **MorphToMany**  
+**BelongsToMany**  and **MorphToMany**
 
 ## Which events are dispatched and when they are dispatched
-Four BelongsToMany methods dispatches events from this package : 
+Four BelongsToMany methods dispatches events from this package :
 
 **attach()**  
 Dispatches **one** **pivotAttaching** and **one** **pivotAttached** event.  
-Even when more rows are added only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable, and the changed row ids with attributes in the $pivotIdsAttributes variable.   
+Even when more rows are added only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable, and the changed row ids with attributes in the $pivotIdsAttributes variable.
 
 **detach()**  
 Dispatches **one** **pivotDetaching** and **one** **pivotDetached** event.  
-Even when more rows are deleted only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable.   
+Even when more rows are deleted only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable.
 
 **updateExistingPivot()**  
 Dispatches **one** **pivotUpdating** and **one** **pivotUpdated** event.   
-You can change only one row in the pivot table with updateExistingPivot.   
+You can change only one row in the pivot table with updateExistingPivot.
 
 **sync()**  
-Dispatches **more** **pivotAttaching** and **more** **pivotAttached** events, depending on how many rows are added in the pivot table. These events are not dispatched if nothing is attached.  
-Dispatches **one** **pivotDetaching** and **one** **pivotDetached** event, but you can see all deleted ids in the $pivotIds variable. This event is not dispatched if nothing is detached.  
-E.g. when you call sync() if two rows are added and two are deleted **two** **pivotAttaching** and **two** **pivotAttached** events and **one** **pivotDetaching** and **one** **pivotDetached** event will be dispatched.  
-If sync() is called but rows are not added or deleted events are not dispatched.  
+Dispatches **one** **pivotSyncing** and **one** **pivotSynced** event.  
+Whether a row was attached/detached/updated during sync only **one** event is dispatched for all rows but in that case, you can see all the attached/detached/updated rows in the $changes variables.  
+E.g. *How does sync work:* The sync first detaches all associations and then attaches or updates new entries one by one.
+
 
 
 ## Usage
 
 We have three tables in database users(id, name), roles(id, name), role_user(user_id, role_id).
-We have two models : 
+We have two models :
 
 ```
 ...
@@ -129,6 +138,13 @@ class User extends Model
     {
         return $this->belongsToMany(Role::class);
     }
+    
+    static::pivotSynced(function ($model, $relationName, $changes) {
+         echo 'pivotSynced';
+         echo get_class($model);
+         echo $relationName;
+         print_r($changes);
+     });
     
     static::pivotAttached(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
         echo 'pivotAttached';
@@ -161,12 +177,12 @@ class Role extends Model
     ....
 ```
 
-### Attaching 
+### Attaching
 
 For attach() or detach() one event is dispatched for both pivot ids.
 
 #### Attaching with int
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->attach(1);
@@ -182,7 +198,7 @@ roles
 
 
 #### Attaching with array
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->attach([1]);
@@ -198,7 +214,7 @@ roles
 
 
 #### Attaching with model
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->attach(Role::first());
@@ -214,7 +230,7 @@ roles
 
 
 #### Attaching with collection
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->attach(Role::get());
@@ -230,7 +246,7 @@ roles
 
 
 #### Attaching with array (id => attributes)
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->attach([1, 2 => ['attribute' => 'test']], ['attribute2' => 'test2']);
@@ -247,33 +263,41 @@ roles
 
 ### Syncing
 
-For sync() method event is dispatched for each pivot row.
-
-Running this code 
+Running this code
 ```
 $user = User::first();
-$user->roles()->sync([1, 2]);
+$user->roles()->attach([
+     1 => ['pivot_attribut' => 1],
+     2 => ['pivot_attribut' => 0]
+ ]);
+ $user->roles()->sync([
+     1 => ['pivot_attribut' => 0]
+     3 => ['pivot_attribut' => 1]
+ ]);
 ```
 
 You will see this output
 
 ```
-pivotAttached
+pivotSynced
 App\Models\User
 roles
-[1]
-[1 => []]
-
-pivotAttached
-App\Models\User
-roles
-[2]
-[2 => []]
+[
+   "attached" => [
+     0 => 3
+   ]
+   "detached" => [
+     1 => 2
+   ]
+   "updated" => [
+     0 => 1
+   ]
+ ]
 ```
 
 ### Detaching
 
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->detach([1, 2]);
@@ -288,7 +312,7 @@ roles
 
 ### Updating
 
-Running this code 
+Running this code
 ```
 $user = User::first();
 $user->roles()->updateExistingPivot(1, ['attribute' => 'test']);

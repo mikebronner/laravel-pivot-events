@@ -18,9 +18,9 @@ We thank the following sponsors for their generosity. Please take a moment to ch
 
 ## Installation
 1.Install package with composer:
-```
-composer require "genealabs/laravel-pivot-events:*"
-```
+    ```
+    composer require "genealabs/laravel-pivot-events:*"
+    ```
 
 2. Use `GeneaLabs\LaravelPivotEvents\Traits\PivotEventTrait` trait in your base
    model or only in particular models.
@@ -120,32 +120,29 @@ Dispatches **one** **pivotSyncing** and **one** **pivotSynced** event.
 Whether a row was attached/detached/updated during sync only **one** event is dispatched for all rows but in that case, you can see all the attached/detached/updated rows in the $changes variables.  
 E.g. *How does sync work:* The sync first detaches all associations and then attaches or updates new entries one by one.
 
-
-
 ## Usage
 
 We have three tables in database users(id, name), roles(id, name), role_user(user_id, role_id).
 We have two models :
 
 ```
-...
 class User extends Model
 {
     use PivotEventTrait;
-    ....
-    
+    // ...
+
     public function roles()
     {
         return $this->belongsToMany(Role::class);
     }
-    
+
     static::pivotSynced(function ($model, $relationName, $changes) {
-         echo 'pivotSynced';
-         echo get_class($model);
-         echo $relationName;
-         print_r($changes);
-     });
-    
+        echo 'pivotSynced';
+        echo get_class($model);
+        echo $relationName;
+        print_r($changes);
+    });    
+
     static::pivotAttached(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
         echo 'pivotAttached';
         echo get_class($model);
@@ -161,32 +158,36 @@ class User extends Model
         print_r($pivotIds);
         print_r($pivotIdsAttributes);
     });
-    
+
     static::pivotDetached(function ($model, $relationName, $pivotIds) {
         echo 'pivotDetached';
         echo get_class($model);
         echo $relationName;
         print_r($pivotIds);
     });
+
+    // ...
+}
 ```
 
 ```
-...
 class Role extends Model
 {
-    ....
+    // ...
+}
 ```
 
 ### Attaching
 
 For attach() or detach() one event is dispatched for both pivot ids.
 
-#### Attaching with int
+#### Attaching With Primary Key
 Running this code
-```
+```php
 $user = User::first();
 $user->roles()->attach(1);
 ```
+
 You will see this output
 ```
 pivotAttached
@@ -195,7 +196,6 @@ roles
 [1]
 [1 => []]
 ```
-
 
 #### Attaching with array
 Running this code
@@ -212,13 +212,13 @@ roles
 [1 => []]
 ```
 
-
 #### Attaching with model
 Running this code
-```
+```php
 $user = User::first();
 $user->roles()->attach(Role::first());
 ```
+
 You will see this output
 ```
 pivotAttached
@@ -228,13 +228,13 @@ roles
 [1 => []]
 ```
 
-
 #### Attaching with collection
 Running this code
-```
+```php
 $user = User::first();
 $user->roles()->attach(Role::get());
 ```
+
 You will see this output
 ```
 pivotAttached
@@ -243,7 +243,6 @@ roles
 [1, 2]
 [1 => [], 2 => []]
 ```
-
 
 #### Attaching with array (id => attributes)
 Running this code
@@ -260,11 +259,9 @@ roles
 [1 => [], 2 => ['attribute' => 'test', 'attribute2' => 'test2']]
 ```
 
-
 ### Syncing
-
 Running this code
-```
+```php
 $user = User::first();
 $user->roles()->attach([
      1 => ['pivot_attribut' => 1],
@@ -277,7 +274,6 @@ $user->roles()->attach([
 ```
 
 You will see this output
-
 ```
 pivotSynced
 App\Models\User
@@ -296,7 +292,6 @@ roles
 ```
 
 ### Detaching
-
 Running this code
 ```
 $user = User::first();

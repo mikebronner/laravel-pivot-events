@@ -56,6 +56,7 @@ trait ExtendFireModelEventTrait
         $events = [
             "pivotAttached",
             "pivotDetached",
+            "pivotSynced",
             "pivotUpdated",
         ];
 

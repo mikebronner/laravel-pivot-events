@@ -1,5 +1,8 @@
 <?php namespace GeneaLabs\LaravelPivotEvents\Traits;
 
+use Illuminate\Contracts\Broadcasting\Factory as BroadcastingFactory;
+use Illuminate\Support\Arr;
+
 trait ExtendFireModelEventTrait
 {
     /**
@@ -40,9 +43,45 @@ trait ExtendFireModelEventTrait
             'pivotIds' => $ids,
             'pivotIdsAttributes' => $idsAttributes
         ];
-
-        return $result
+        $result = $result
             ?: static::$dispatcher
                 ->{$method}("eloquent.{$event}: " . static::class, $payload);
+        $this->broadcastPivotEvent($event, $payload);
+
+        return $result;
+    }
+
+    protected function broadcastPivotEvent(string $event, array $payload): void
+    {
+        $events = [
+            "pivotAttached",
+            "pivotDetached",
+            "pivotUpdated",
+        ];
+
+        if (! in_array($event, $events)) {
+            return;
+        }
+
+        $name = method_exists($this, "broadcastAs")
+                ? $this->broadcastAs()
+                : $event;
+        $channels = method_exists($this, "broadcastOn")
+            ? Arr::wrap($this->broadcastOn($event))
+            : [];
+
+        if (empty($channels)) {
+            return;
+        }
+
+        $connections = method_exists($this, "broadcastConnections")
+            ? $this->broadcastConnections()
+            : [null];
+        $manager = app(BroadcastingFactory::class);
+
+        foreach ($connections as $connection) {
+            $manager->connection($connection)
+                ->broadcast($channels, $name, $payload);
+        }
     }
 }

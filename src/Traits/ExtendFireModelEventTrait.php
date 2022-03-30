@@ -64,9 +64,10 @@ trait ExtendFireModelEventTrait
             return;
         }
 
+        $className = explode("\\", get_class($this));
         $name = method_exists($this, "broadcastAs")
                 ? $this->broadcastAs()
-                : $event;
+                : array_pop($className) . ucwords($event);
         $channels = method_exists($this, "broadcastOn")
             ? Arr::wrap($this->broadcastOn($event))
             : [];

@@ -37,11 +37,11 @@ trait ExtendFireModelEventTrait
         }
 
         $payload = [
-            0 => $this,
             'model' => $this,
             'relation' => $relationName,
             'pivotIds' => $ids,
-            'pivotIdsAttributes' => $idsAttributes
+            'pivotIdsAttributes' => $idsAttributes,
+            0 => $this,
         ];
         $result = $result
             ?: static::$dispatcher

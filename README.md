@@ -1,4 +1,5 @@
 # Laravel Pivot Events
+
 This package introduces new eloquent events for sync(), attach(), detach(), or
 updateExistingPivot() methods on BelongsToMany and MorphToMany relationships.
 
@@ -8,15 +9,18 @@ created mainly to address compatibility issues with
 [Model Caching for Laravel](https://github.com/GeneaLabs/laravel-model-caching).
 
 ## Sponsors
+
 We thank the following sponsors for their generosity. Please take a moment to check them out:
 
 - [LIX](https://lix-it.com)
 
 ## Requirements
+
 - Laravel 8.0+
 - PHP 7.3+
 
 ## Installation
+
 1.Install package with composer:
     ```
     composer require "genealabs/laravel-pivot-events:*"
@@ -47,6 +51,7 @@ New events are :
 - `pivotUpdating`, `pivotUpdated`
 
 The easiest way to catch events is using methods in your model's `boot()` method:
+
 ```php
 public static function boot()
 {
@@ -98,9 +103,11 @@ You can also catch them using dedicated Event Listeners:
 ```
 
 ## Supported Relationships
+
 **BelongsToMany**  and **MorphToMany**
 
 ## Which events are dispatched and when they are dispatched
+
 Four BelongsToMany methods dispatches events from this package :
 
 **attach()**  
@@ -182,6 +189,7 @@ class Role extends Model
 For attach() or detach() one event is dispatched for both pivot ids.
 
 #### Attaching With Primary Key
+
 Running this code
 ```php
 $user = User::first();
@@ -198,6 +206,7 @@ roles
 ```
 
 #### Attaching with array
+
 Running this code
 ```
 $user = User::first();
@@ -213,6 +222,7 @@ roles
 ```
 
 #### Attaching with model
+
 Running this code
 ```php
 $user = User::first();
@@ -229,6 +239,7 @@ roles
 ```
 
 #### Attaching with collection
+
 Running this code
 ```php
 $user = User::first();
@@ -245,6 +256,7 @@ roles
 ```
 
 #### Attaching with array (id => attributes)
+
 Running this code
 ```
 $user = User::first();
@@ -260,6 +272,7 @@ roles
 ```
 
 ### Syncing
+
 Running this code
 ```php
 $user = User::first();
@@ -292,6 +305,7 @@ roles
 ```
 
 ### Detaching
+
 Running this code
 ```
 $user = User::first();

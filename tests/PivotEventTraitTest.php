@@ -340,7 +340,6 @@ class PivotEventTraitTest extends TestCase
         ]);
     }
 
-    /** @group test */
     public function test_polymorphic_sync_int()
     {
         $this->startListening();

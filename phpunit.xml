@@ -10,15 +10,6 @@
     cacheDirectory=".phpunit.result.cache"
     backupStaticProperties="false"
 >
-  <coverage>
-    <include>
-      <directory>./src</directory>
-    </include>
-    <exclude>
-      <directory>./tests</directory>
-      <directory>./vendor</directory>
-    </exclude>
-  </coverage>
   <php>
     <ini name="error_reporting" value="-1"/>
   </php>

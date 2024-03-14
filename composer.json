@@ -8,10 +8,10 @@
         "laravel sync events",
         "eloquent events"
     ],
-    "homepage": "https://github.com/GeneaLabs/laravel-pivot",
+    "homepage": "https://github.com/mikebronner/laravel-pivot-events",
     "support": {
-        "issues": "https://github.com/GeneaLabs/laravel-pivot/issues",
-        "source": "https://github.com/GeneaLabs/laravel-pivot"
+        "issues": "https://github.com/mikebronner/laravel-pivot-events/issues",
+        "source": "https://github.com/mikebronner/laravel-pivot-events"
     },
     "license": "MIT",
     "authors": [
@@ -23,11 +23,12 @@
         }
     ],
     "require": {
-        "illuminate/database": "^8.0|^9.0|^10.0",
-        "illuminate/support": "^8.0|^9.0|^10.0"
+        "illuminate/database": "^8.0|^9.0|^10.0|^11.0",
+        "illuminate/support": "^8.0|^9.0|^10.0|^11.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^7.0|^8.0",
+        "orchestra/testbench": "^9.0",
+        "phpunit/phpunit": "^10.5",
         "symfony/thanks": "^1.0"
     },
     "autoload": {

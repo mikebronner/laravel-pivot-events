@@ -1,5 +1,5 @@
 {
-    "name": "genealabs/laravel-pivot-events",
+    "name": "mikebronner/laravel-pivot-events",
     "description": "This package introduces new eloquent events for sync(), attach(), detach() or updateExistingPivot() methods on BelongsToMany relation.",
     "keywords": [
         "laravel BelongsToMany events",

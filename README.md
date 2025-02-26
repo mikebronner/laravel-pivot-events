@@ -19,7 +19,7 @@ We thank the following sponsors for their generosity. Please take a moment to ch
 ## Installation
 1.Install package with composer:
     ```
-    composer require "genealabs/laravel-pivot-events:*"
+    composer require "mikebronner/laravel-pivot-events:*"
     ```
 
 2. Use `GeneaLabs\LaravelPivotEvents\Traits\PivotEventTrait` trait in your base
@@ -55,7 +55,7 @@ public static function boot()
     static::pivotSyncing(function ($model, $relationName) {
         //
     });
-     
+
     static::pivotSynced(function ($model, $relationName, $changes) {
         //
     });
@@ -63,11 +63,11 @@ public static function boot()
     static::pivotAttaching(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
         //
     });
-    
+
     static::pivotAttached(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
         //
     });
-    
+
     static::pivotDetaching(function ($model, $relationName, $pivotIds) {
         //
     });
@@ -75,15 +75,15 @@ public static function boot()
     static::pivotDetached(function ($model, $relationName, $pivotIds) {
         //
     });
-    
+
     static::pivotUpdating(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
         //
     });
-    
+
     static::pivotUpdated(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
         //
     });
-    
+
     static::updating(function ($model) {
         //this is how we catch standard eloquent events
     });
@@ -103,21 +103,21 @@ You can also catch them using dedicated Event Listeners:
 ## Which events are dispatched and when they are dispatched
 Four BelongsToMany methods dispatches events from this package :
 
-**attach()**  
-Dispatches **one** **pivotAttaching** and **one** **pivotAttached** event.  
+**attach()**
+Dispatches **one** **pivotAttaching** and **one** **pivotAttached** event.
 Even when more rows are added only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable, and the changed row ids with attributes in the $pivotIdsAttributes variable.
 
-**detach()**  
-Dispatches **one** **pivotDetaching** and **one** **pivotDetached** event.  
+**detach()**
+Dispatches **one** **pivotDetaching** and **one** **pivotDetached** event.
 Even when more rows are deleted only **one** event is dispatched for all rows but in that case, you can see all changed row ids in the $pivotIds variable.
 
-**updateExistingPivot()**  
-Dispatches **one** **pivotUpdating** and **one** **pivotUpdated** event.   
+**updateExistingPivot()**
+Dispatches **one** **pivotUpdating** and **one** **pivotUpdated** event.
 You can change only one row in the pivot table with updateExistingPivot.
 
-**sync()**  
-Dispatches **one** **pivotSyncing** and **one** **pivotSynced** event.  
-Whether a row was attached/detached/updated during sync only **one** event is dispatched for all rows but in that case, you can see all the attached/detached/updated rows in the $changes variables.  
+**sync()**
+Dispatches **one** **pivotSyncing** and **one** **pivotSynced** event.
+Whether a row was attached/detached/updated during sync only **one** event is dispatched for all rows but in that case, you can see all the attached/detached/updated rows in the $changes variables.
 E.g. *How does sync work:* The sync first detaches all associations and then attaches or updates new entries one by one.
 
 ## Usage
@@ -141,7 +141,7 @@ class User extends Model
         echo get_class($model);
         echo $relationName;
         print_r($changes);
-    });    
+    });
 
     static::pivotAttached(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
         echo 'pivotAttached';
@@ -150,7 +150,7 @@ class User extends Model
         print_r($pivotIds);
         print_r($pivotIdsAttributes);
     });
-    
+
     static::pivotUpdated(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) {
         echo 'pivotUpdated';
         echo get_class($model);

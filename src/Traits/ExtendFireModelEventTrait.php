@@ -28,14 +28,6 @@ trait ExtendFireModelEventTrait
             ? 'until'
             : 'dispatch';
 
-        $result = $this->filterModelEventResults(
-            $this->fireCustomModelEvent($event, $method)
-        );
-
-        if (false === $result) {
-            return false;
-        }
-
         $payload = [
             'model' => $this,
             'relation' => $relationName,
@@ -43,12 +35,42 @@ trait ExtendFireModelEventTrait
             'pivotIdsAttributes' => $idsAttributes,
             0 => $this,
         ];
+
+        $result = $this->filterModelEventResults(
+            $this->fireCustomModelEvent($event, $method, $payload)
+        );
+
+        if (false === $result) {
+            return false;
+        }
+
         $result = $result
             ?: static::$dispatcher
                 ->{$method}("eloquent.{$event}: " . static::class, $payload);
         $this->broadcastPivotEvent($event, $payload);
 
         return $result;
+    }
+
+    /**
+     * Fire a custom model event for the given event.
+     *
+     * @param  string  $event
+     * @param  string  $method
+     *
+     * @return mixed|null
+     */
+    protected function fireCustomModelEvent($event, $method, $payload = [])
+    {
+        if (! isset($this->dispatchesEvents[$event])) {
+            return;
+        }
+
+        $result = static::$dispatcher->$method(new $this->dispatchesEvents[$event]($this, $payload));
+
+        if (! is_null($result)) {
+            return $result;
+        }
     }
 
     protected function broadcastPivotEvent(string $event, array $payload): void

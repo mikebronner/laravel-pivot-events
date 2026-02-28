@@ -339,7 +339,7 @@ class DispatchesEventsTest extends TestCase
         $this->assertSame('roles', $synced[0]->payload['relation']);
     }
 
-    public function test_sync_to_same_state_fires_only_synced_custom_event()
+    public function test_sync_to_same_state_does_not_fire_synced_custom_event()
     {
         $user = UserWithFullPayloadEvents::find(1);
         $user->roles()->attach([1]);
@@ -355,7 +355,7 @@ class DispatchesEventsTest extends TestCase
 
         $this->assertCount(0, $attached, 'No attach when syncing to same state');
         $this->assertCount(0, $detached, 'No detach when syncing to same state');
-        $this->assertCount(1, $synced, 'pivotSynced should still fire');
+        $this->assertCount(0, $synced, 'pivotSynced should not fire when nothing changed');
     }
 
     public function test_sync_empty_array_fires_detach_and_synced_custom_events()

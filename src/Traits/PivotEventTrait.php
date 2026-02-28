@@ -20,7 +20,6 @@ trait PivotEventTrait
                 'pivotDetaching', 'pivotDetached',
                 'pivotUpdating', 'pivotUpdated',
             ],
-            $this->observables
         );
     }
 

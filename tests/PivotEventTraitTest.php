@@ -336,6 +336,10 @@ class PivotEventTraitTest extends TestCase
         $this->assertEquals(1, \DB::table('role_user')->count());
         $this->check_events([
             'eloquent.pivotSyncing: '.User::class,
+            'eloquent.pivotDetaching: '.User::class,
+            'eloquent.pivotDetached: '.User::class,
+            'eloquent.pivotAttaching: '.User::class,
+            'eloquent.pivotAttached: '.User::class,
             'eloquent.pivotSynced: '.User::class,
         ]);
     }
@@ -355,6 +359,10 @@ class PivotEventTraitTest extends TestCase
 
         $this->check_events([
             'eloquent.pivotSyncing: '.Post::class,
+            'eloquent.pivotDetaching: '.Post::class,
+            'eloquent.pivotDetached: '.Post::class,
+            'eloquent.pivotAttaching: '.Post::class,
+            'eloquent.pivotAttached: '.Post::class,
             'eloquent.pivotSynced: '.Post::class,
         ]);
     }
@@ -372,6 +380,10 @@ class PivotEventTraitTest extends TestCase
         $this->assertEquals(1, \DB::table('role_user')->count());
         $this->check_events([
             'eloquent.pivotSyncing: '.User::class,
+            'eloquent.pivotDetaching: '.User::class,
+            'eloquent.pivotDetached: '.User::class,
+            'eloquent.pivotAttaching: '.User::class,
+            'eloquent.pivotAttached: '.User::class,
             'eloquent.pivotSynced: '.User::class,
         ]);
     }
@@ -389,6 +401,10 @@ class PivotEventTraitTest extends TestCase
         $this->assertEquals(1, \DB::table('taggables')->count());
         $this->check_events([
             'eloquent.pivotSyncing: '.Video::class,
+            'eloquent.pivotDetaching: '.Video::class,
+            'eloquent.pivotDetached: '.Video::class,
+            'eloquent.pivotAttaching: '.Video::class,
+            'eloquent.pivotAttached: '.Video::class,
             'eloquent.pivotSynced: '.Video::class,
         ]);
     }
@@ -406,9 +422,12 @@ class PivotEventTraitTest extends TestCase
 
         $this->check_events([
             'eloquent.pivotSyncing: '.User::class,
+            'eloquent.pivotDetaching: '.User::class,
+            'eloquent.pivotDetached: '.User::class,
+            'eloquent.pivotAttaching: '.User::class,
+            'eloquent.pivotAttached: '.User::class,
             'eloquent.pivotSynced: '.User::class,
         ]);
-        $this->assertEquals(2, count(self::$events));
     }
 
     public function test_polymorphic_sync_model()
@@ -426,9 +445,12 @@ class PivotEventTraitTest extends TestCase
 
         $this->check_events([
             'eloquent.pivotSyncing: '.Video::class,
+            'eloquent.pivotDetaching: '.Video::class,
+            'eloquent.pivotDetached: '.Video::class,
+            'eloquent.pivotAttaching: '.Video::class,
+            'eloquent.pivotAttached: '.Video::class,
             'eloquent.pivotSynced: '.Video::class,
         ]);
-        $this->assertEquals(2, count(self::$events));
     }
 
     public function test_sync_collection()
@@ -444,6 +466,12 @@ class PivotEventTraitTest extends TestCase
 
         $this->check_events([
             'eloquent.pivotSyncing: '.User::class,
+            'eloquent.pivotDetaching: '.User::class,
+            'eloquent.pivotDetached: '.User::class,
+            'eloquent.pivotAttaching: '.User::class,
+            'eloquent.pivotAttached: '.User::class,
+            'eloquent.pivotAttaching: '.User::class,
+            'eloquent.pivotAttached: '.User::class,
             'eloquent.pivotSynced: '.User::class,
         ]);
     }
@@ -462,6 +490,10 @@ class PivotEventTraitTest extends TestCase
 
         $this->check_events([
             'eloquent.pivotSyncing: '.Tag::class,
+            'eloquent.pivotDetaching: '.Tag::class,
+            'eloquent.pivotDetached: '.Tag::class,
+            'eloquent.pivotAttaching: '.Tag::class,
+            'eloquent.pivotAttached: '.Tag::class,
             'eloquent.pivotSynced: '.Tag::class,
         ]);
     }
@@ -490,6 +522,100 @@ class PivotEventTraitTest extends TestCase
 
         $eventName = 'eloquent.updating: '.User::class;
         $this->check_variables(0, [], [], null);
+    }
+
+
+    public function test_sync_fires_events_for_attached_detached_and_unchanged()
+    {
+        $this->startListening();
+        $user = User::find(1);
+        $user->roles()->attach([1, 2]);
+
+        $this->startListening();
+        // Role 1 stays (unchanged), role 2 detached, role 3 attached
+        $user->roles()->sync([1, 3]);
+
+        $this->assertEquals(2, \DB::table('role_user')->count());
+        $this->check_events([
+            'eloquent.pivotSyncing: '.User::class,
+            'eloquent.pivotDetaching: '.User::class,
+            'eloquent.pivotDetached: '.User::class,
+            'eloquent.pivotAttaching: '.User::class,
+            'eloquent.pivotAttached: '.User::class,
+            'eloquent.pivotSynced: '.User::class,
+        ]);
+    }
+
+    public function test_sync_empty_array_fires_detach_all_event()
+    {
+        $this->startListening();
+        $user = User::find(1);
+        $user->roles()->attach([1, 2, 3]);
+        $this->assertEquals(3, \DB::table('role_user')->count());
+
+        $this->startListening();
+        $user->roles()->sync([]);
+
+        $this->assertEquals(0, \DB::table('role_user')->count());
+        $this->check_events([
+            'eloquent.pivotSyncing: '.User::class,
+            'eloquent.pivotDetaching: '.User::class,
+            'eloquent.pivotDetached: '.User::class,
+            'eloquent.pivotSynced: '.User::class,
+        ]);
+    }
+
+    public function test_polymorphic_sync_empty_array_fires_detach_all_event()
+    {
+        $this->startListening();
+        $video = Video::find(1);
+        $video->tags()->attach([1, 2]);
+        $this->assertEquals(2, \DB::table('taggables')->count());
+
+        $this->startListening();
+        $video->tags()->sync([]);
+
+        $this->assertEquals(0, \DB::table('taggables')->count());
+        $this->check_events([
+            'eloquent.pivotSyncing: '.Video::class,
+            'eloquent.pivotDetaching: '.Video::class,
+            'eloquent.pivotDetached: '.Video::class,
+            'eloquent.pivotSynced: '.Video::class,
+        ]);
+    }
+
+    public function test_sync_does_not_fire_duplicate_events()
+    {
+        $this->startListening();
+        $user = User::find(1);
+        $user->roles()->attach([1]);
+
+        $this->startListening();
+        // Sync to same state — no changes, only syncing/synced
+        $user->roles()->sync([1]);
+
+        $this->check_events([
+            'eloquent.pivotSyncing: '.User::class,
+            'eloquent.pivotSynced: '.User::class,
+        ]);
+    }
+
+    public function test_sync_with_intermediate_pivot_values()
+    {
+        $this->startListening();
+        $user = User::find(1);
+        $user->roles()->sync([1 => ['value' => 123], 2 => ['value' => 456]], ['value2' => 789]);
+
+        $this->assertEquals(2, \DB::table('role_user')->count());
+        $this->check_events([
+            'eloquent.pivotSyncing: '.User::class,
+            'eloquent.pivotAttaching: '.User::class,
+            'eloquent.pivotAttached: '.User::class,
+            'eloquent.pivotAttaching: '.User::class,
+            'eloquent.pivotAttached: '.User::class,
+            'eloquent.pivotSynced: '.User::class,
+        ]);
+        $this->check_database(2, 123);
     }
 
     private function check_events($events)

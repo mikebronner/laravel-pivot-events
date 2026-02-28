@@ -13,8 +13,8 @@ We thank the following sponsors for their generosity. Please take a moment to ch
 - [LIX](https://lix-it.com)
 
 ## Requirements
-- Laravel 8.0+
-- PHP 7.3+
+- Laravel 11.0+
+- PHP 8.2+
 
 ## Installation
 1.Install package with composer:

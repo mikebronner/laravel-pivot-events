@@ -29,7 +29,7 @@
     },
     "require-dev": {
         "orchestra/testbench": "^9.0|^10.0|^11.0",
-        "phpunit/phpunit": "^10.5|^11.0",
+        "phpunit/phpunit": "^10.5|^11.0|^12.0",
         "symfony/thanks": "^1.0"
     },
     "autoload": {

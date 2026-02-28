@@ -19,10 +19,7 @@ trait FiresPivotEventsTrait
             return false;
         }
 
-        $parentResult = [];
-        $this->parent->withoutEvents(function () use ($ids, $detaching, &$parentResult) {
-            $parentResult = parent::sync($ids, $detaching);
-        });
+        $parentResult = parent::sync($ids, $detaching);
 
         $this->parent->fireModelEvent('pivotSynced', false, $this->getRelationName(), $parentResult);
 

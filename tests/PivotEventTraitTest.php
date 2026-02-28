@@ -591,12 +591,11 @@ class PivotEventTraitTest extends TestCase
         $user->roles()->attach([1]);
 
         $this->startListening();
-        // Sync to same state — no changes, only syncing/synced
+        // Sync to same state — no changes, only syncing fires (synced suppressed)
         $user->roles()->sync([1]);
 
         $this->check_events([
             'eloquent.pivotSyncing: '.User::class,
-            'eloquent.pivotSynced: '.User::class,
         ]);
     }
 
@@ -616,6 +615,89 @@ class PivotEventTraitTest extends TestCase
             'eloquent.pivotSynced: '.User::class,
         ]);
         $this->check_database(2, 123);
+    }
+
+    // --- conditional event suppression tests ---
+
+    public function test_sync_no_changes_does_not_fire_synced()
+    {
+        $this->startListening();
+        $user = User::find(1);
+        $user->roles()->attach([1, 2]);
+
+        $this->startListening();
+        $user->roles()->sync([1, 2]);
+
+        $this->check_events([
+            'eloquent.pivotSyncing: '.User::class,
+        ]);
+    }
+
+    public function test_sync_with_changes_fires_synced()
+    {
+        $this->startListening();
+        $user = User::find(1);
+        $user->roles()->attach([1]);
+
+        $this->startListening();
+        $user->roles()->sync([2, 3]);
+
+        $this->check_events([
+            'eloquent.pivotSyncing: '.User::class,
+            'eloquent.pivotDetaching: '.User::class,
+            'eloquent.pivotDetached: '.User::class,
+            'eloquent.pivotAttaching: '.User::class,
+            'eloquent.pivotAttached: '.User::class,
+            'eloquent.pivotAttaching: '.User::class,
+            'eloquent.pivotAttached: '.User::class,
+            'eloquent.pivotSynced: '.User::class,
+        ]);
+    }
+
+    public function test_detach_non_existent_id_does_not_fire_detached()
+    {
+        $this->startListening();
+        $user = User::find(1);
+        $user->roles()->attach([1]);
+
+        $this->startListening();
+        $result = $user->roles()->detach([999]);
+
+        $this->assertEquals(0, $result);
+        $this->check_events([
+            'eloquent.pivotDetaching: '.User::class,
+        ]);
+    }
+
+    public function test_detach_existing_id_fires_detached()
+    {
+        $this->startListening();
+        $user = User::find(1);
+        $user->roles()->attach([1, 2]);
+
+        $this->startListening();
+        $result = $user->roles()->detach([1]);
+
+        $this->assertEquals(1, $result);
+        $this->check_events([
+            'eloquent.pivotDetaching: '.User::class,
+            'eloquent.pivotDetached: '.User::class,
+        ]);
+    }
+
+    public function test_polymorphic_detach_non_existent_does_not_fire_detached()
+    {
+        $this->startListening();
+        $post = Post::find(1);
+        $post->tags()->attach([1]);
+
+        $this->startListening();
+        $result = $post->tags()->detach([999]);
+
+        $this->assertEquals(0, $result);
+        $this->check_events([
+            'eloquent.pivotDetaching: '.Post::class,
+        ]);
     }
 
     private function check_events($events)
